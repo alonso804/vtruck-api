@@ -4,9 +4,6 @@ import pkg from "../package.json";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import "babel-core/register";
-import "babel-polyfill";
-
 import { createRoles } from "./libs/initialSetup";
 
 import authRoutes from "./routes/authRoutes";
