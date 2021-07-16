@@ -21,52 +21,60 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var signup = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* (req, res) {
-    var {
-      firstName,
-      lastName,
-      username,
-      email,
-      password,
-      roles
-    } = req.body;
-    var newUser = new _User.default({
-      firstName,
-      lastName,
-      username,
-      email,
-      password: yield _User.default.encryptPassword(password)
-    });
-
-    if (roles) {
-      var foundRoles = yield _Role.default.find({
-        name: {
-          $in: roles.map(role => role.toString())
-        }
-      });
-      newUser.roles = foundRoles.map(role => role._id);
-    } else {
-      var role = yield _Role.default.findOne({
-        name: "user"
-      });
-      newUser.roles = [role._id];
-    }
-
-    var savedUser = yield newUser.save();
     console.log("[SIGN UP] Saved User");
-    console.log(savedUser);
 
-    var token = _jsonwebtoken.default.sign({
-      id: savedUser._id
-    }, _config.default.SECRET, {
-      expiresIn: 86400 // 24 hrs
+    try {
+      var {
+        firstName,
+        lastName,
+        username,
+        email,
+        password,
+        roles
+      } = req.body;
+      var newUser = new _User.default({
+        firstName,
+        lastName,
+        username,
+        email,
+        password: yield _User.default.encryptPassword(password)
+      });
 
-    });
+      if (roles) {
+        var foundRoles = yield _Role.default.find({
+          name: {
+            $in: roles.map(role => role.toString())
+          }
+        });
+        newUser.roles = foundRoles.map(role => role._id);
+      } else {
+        var role = yield _Role.default.findOne({
+          name: "user"
+        });
+        newUser.roles = [role._id];
+      }
 
-    return res.status(200).json({
-      token,
-      ok: true,
-      message: "Cliente creado correctamente"
-    });
+      var savedUser = yield newUser.save();
+      console.log(savedUser);
+
+      var token = _jsonwebtoken.default.sign({
+        id: savedUser._id
+      }, _config.default.SECRET, {
+        expiresIn: 86400 // 24 hrs
+
+      });
+
+      return res.status(200).json({
+        token,
+        ok: true,
+        message: "Cliente creado correctamente"
+      });
+    } catch (err) {
+      return res.status(500).json({
+        ok: false,
+        message: err
+      });
+    }
   });
 
   return function signup(_x, _x2) {
@@ -78,40 +86,48 @@ exports.signup = signup;
 
 var signin = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator(function* (req, res) {
-    var userFound = yield _User.default.findOne({
-      username: req.body.username.toString()
-    }).populate("roles");
-
-    if (!userFound) {
-      return res.status(400).json({
-        ok: false,
-        message: "Usuario no encontrado"
-      });
-    }
-
-    var matchPassword = yield _User.default.comparePassword(req.body.password, userFound.password);
-
-    if (!matchPassword) {
-      return res.status(401).json({
-        ok: false,
-        message: "Contraseña incorrecta"
-      });
-    }
-
-    var token = _jsonwebtoken.default.sign({
-      id: userFound._id
-    }, _config.default.SECRET, {
-      expiresIn: 86400
-    });
-
     console.log("[SIGN IN] Saved User");
-    console.log(userFound);
-    return res.status(200).json({
-      ok: true,
-      message: "Usuario encontrado",
-      token,
-      userId: userFound._id
-    });
+
+    try {
+      var userFound = yield _User.default.findOne({
+        username: req.body.username.toString()
+      }).populate("roles");
+
+      if (!userFound) {
+        return res.status(400).json({
+          ok: false,
+          message: "Usuario no encontrado"
+        });
+      }
+
+      var matchPassword = yield _User.default.comparePassword(req.body.password, userFound.password);
+
+      if (!matchPassword) {
+        return res.status(401).json({
+          ok: false,
+          message: "Contraseña incorrecta"
+        });
+      }
+
+      var token = _jsonwebtoken.default.sign({
+        id: userFound._id
+      }, _config.default.SECRET, {
+        expiresIn: 86400
+      });
+
+      console.log(userFound);
+      return res.status(200).json({
+        ok: true,
+        message: "Usuario encontrado",
+        token,
+        userId: userFound._id
+      });
+    } catch (err) {
+      return res.status(500).json({
+        ok: false,
+        message: err
+      });
+    }
   });
 
   return function signin(_x3, _x4) {

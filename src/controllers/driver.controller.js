@@ -1,35 +1,43 @@
 import Driver from "../models/Driver";
 
 export const createDriver = async (req, res) => {
-  const {
-    name,
-    dni,
-    vehiclePlate,
-    phoneNumber,
-    startDate,
-    endDate,
-    business,
-    observations,
-  } = req.body;
+  console.log("[DRIVER] Save Driver");
 
-  const newDriver = new Driver({
-    name,
-    dni,
-    vehiclePlate,
-    phoneNumber,
-    startDate,
-    endDate,
-    business,
-    observations,
-  });
+  try {
+    const {
+      name,
+      dni,
+      vehiclePlate,
+      phoneNumber,
+      startDate,
+      endDate,
+      business,
+      observations,
+    } = req.body;
 
-  const savedDriver = await newDriver.save();
-  console.log("[DRIVER] Saved Driver");
-  console.log(savedDriver);
+    const newDriver = new Driver({
+      name,
+      dni,
+      vehiclePlate,
+      phoneNumber,
+      startDate,
+      endDate,
+      business,
+      observations,
+    });
 
-  return res
-    .status(200)
-    .json({ ok: true, message: "Conductor creado correctamente" });
+    const savedDriver = await newDriver.save();
+    console.log(savedDriver);
+
+    return res
+      .status(200)
+      .json({ ok: true, message: "Conductor creado correctamente" });
+  } catch (err) {
+    return res.status(500).json({
+      ok: false,
+      message: err,
+    });
+  }
 };
 
 export const getDrivers = async (_, res) => {
@@ -41,70 +49,104 @@ export const getDrivers = async (_, res) => {
     console.log(drivers);
 
     return res.status(200).json({ ok: true, drivers });
-  } catch {
-    return res
-      .status(500)
-      .json({ ok: false, message: "Internal server error" });
+  } catch (err) {
+    return res.status(500).json({
+      ok: false,
+      message: err,
+    });
   }
 };
 
 export const getDriver = async (req, res) => {
-  const driver = await Driver.findById(req.params.id);
-
   console.log("[DRIVER] Get Driver");
-  console.log(driver);
 
-  if (!driver) {
-    return res.status(400).json({ ok: false, message: "No existe conductor" });
+  try {
+    const driver = await Driver.findById(req.params.id);
+
+    console.log(driver);
+
+    if (!driver) {
+      return res
+        .status(400)
+        .json({ ok: false, message: "No existe conductor" });
+    }
+
+    return res.status(200).json({ ok: true, driver });
+  } catch (err) {
+    return res.status(500).json({
+      ok: false,
+      message: err,
+    });
   }
-
-  return res.status(200).json({ ok: true, driver });
 };
 
 export const updateDriver = async (req, res) => {
-  const {
-    name,
-    dni,
-    vehiclePlate,
-    phoneNumber,
-    startDate,
-    endDate,
-    business,
-    observations,
-  } = req.body;
+  console.log("[DRIVER] Update Driver");
 
-  const updatedDriver = await Driver.findByIdAndUpdate(req.params.id, {
-    name,
-    dni,
-    vehiclePlate,
-    phoneNumber,
-    startDate,
-    endDate,
-    business,
-    observations,
-  });
+  try {
+    const {
+      name,
+      dni,
+      vehiclePlate,
+      phoneNumber,
+      startDate,
+      endDate,
+      business,
+      observations,
+    } = req.body;
 
-  console.log("[DRIVER] Updated Driver");
-  console.log(updatedDriver);
+    const updatedDriver = await Driver.findByIdAndUpdate(req.params.id, {
+      name,
+      dni,
+      vehiclePlate,
+      phoneNumber,
+      startDate,
+      endDate,
+      business,
+      observations,
+    });
 
-  if (!updatedDriver) {
-    return res.status(400).json({ ok: false, message: "Conductor no existe" });
+    console.log(updatedDriver);
+
+    if (!updatedDriver) {
+      return res
+        .status(400)
+        .json({ ok: false, message: "Conductor no existe" });
+    }
+
+    return res.json({
+      ok: true,
+      message: "Conductor actualizado correctamente",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      ok: false,
+      message: err,
+    });
   }
-
-  return res.json({ ok: true, message: "Conductor actualizado correctamente" });
 };
 
 export const deleteDriver = async (req, res) => {
-  const deletedDriver = await Driver.findByIdAndDelete(req.params.id);
+  console.log("[DRIVER] Delete Driver");
 
-  console.log("[DRIVER] Deleted Driver");
-  console.log(deletedDriver);
+  try {
+    const deletedDriver = await Driver.findByIdAndDelete(req.params.id);
 
-  if (!deletedDriver) {
-    return res.status(400).json({ ok: false, message: "Conductor no existe" });
+    console.log(deletedDriver);
+
+    if (!deletedDriver) {
+      return res
+        .status(400)
+        .json({ ok: false, message: "Conductor no existe" });
+    }
+
+    return res
+      .status(200)
+      .json({ ok: true, message: "Conductor eliminado correctamente" });
+  } catch (err) {
+    return res.status(500).json({
+      ok: false,
+      message: err,
+    });
   }
-
-  return res
-    .status(200)
-    .json({ ok: true, message: "Conductor eliminado correctamente" });
 };

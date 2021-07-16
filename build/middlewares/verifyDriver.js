@@ -15,18 +15,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var checkDuplicateDni = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* (req, res, next) {
-    var driver = yield _Driver.default.findOne({
-      dni: req.body.dni.toString()
-    });
-
-    if (driver) {
-      return res.status(400).json({
-        ok: false,
-        message: "El conductor ya existe"
+    try {
+      var driver = yield _Driver.default.findOne({
+        dni: req.body.dni.toString()
       });
-    }
 
-    next();
+      if (driver) {
+        return res.status(400).json({
+          ok: false,
+          message: "El conductor ya existe"
+        });
+      }
+
+      next();
+    } catch (err) {
+      console.log(err);
+    }
   });
 
   return function checkDuplicateDni(_x, _x2, _x3) {

@@ -15,33 +15,41 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var createDriver = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* (req, res) {
-    var {
-      name,
-      dni,
-      vehiclePlate,
-      phoneNumber,
-      startDate,
-      endDate,
-      business,
-      observations
-    } = req.body;
-    var newDriver = new _Driver.default({
-      name,
-      dni,
-      vehiclePlate,
-      phoneNumber,
-      startDate,
-      endDate,
-      business,
-      observations
-    });
-    var savedDriver = yield newDriver.save();
-    console.log("[DRIVER] Saved Driver");
-    console.log(savedDriver);
-    return res.status(200).json({
-      ok: true,
-      message: "Conductor creado correctamente"
-    });
+    console.log("[DRIVER] Save Driver");
+
+    try {
+      var {
+        name,
+        dni,
+        vehiclePlate,
+        phoneNumber,
+        startDate,
+        endDate,
+        business,
+        observations
+      } = req.body;
+      var newDriver = new _Driver.default({
+        name,
+        dni,
+        vehiclePlate,
+        phoneNumber,
+        startDate,
+        endDate,
+        business,
+        observations
+      });
+      var savedDriver = yield newDriver.save();
+      console.log(savedDriver);
+      return res.status(200).json({
+        ok: true,
+        message: "Conductor creado correctamente"
+      });
+    } catch (err) {
+      return res.status(500).json({
+        ok: false,
+        message: err
+      });
+    }
   });
 
   return function createDriver(_x, _x2) {
@@ -62,10 +70,10 @@ var getDrivers = /*#__PURE__*/function () {
         ok: true,
         drivers
       });
-    } catch (_unused) {
+    } catch (err) {
       return res.status(500).json({
         ok: false,
-        message: "Internal server error"
+        message: err
       });
     }
   });
@@ -79,21 +87,29 @@ exports.getDrivers = getDrivers;
 
 var getDriver = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator(function* (req, res) {
-    var driver = yield _Driver.default.findById(req.params.id);
     console.log("[DRIVER] Get Driver");
-    console.log(driver);
 
-    if (!driver) {
-      return res.status(400).json({
+    try {
+      var driver = yield _Driver.default.findById(req.params.id);
+      console.log(driver);
+
+      if (!driver) {
+        return res.status(400).json({
+          ok: false,
+          message: "No existe conductor"
+        });
+      }
+
+      return res.status(200).json({
+        ok: true,
+        driver
+      });
+    } catch (err) {
+      return res.status(500).json({
         ok: false,
-        message: "No existe conductor"
+        message: err
       });
     }
-
-    return res.status(200).json({
-      ok: true,
-      driver
-    });
   });
 
   return function getDriver(_x5, _x6) {
@@ -105,40 +121,48 @@ exports.getDriver = getDriver;
 
 var updateDriver = /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator(function* (req, res) {
-    var {
-      name,
-      dni,
-      vehiclePlate,
-      phoneNumber,
-      startDate,
-      endDate,
-      business,
-      observations
-    } = req.body;
-    var updatedDriver = yield _Driver.default.findByIdAndUpdate(req.params.id, {
-      name,
-      dni,
-      vehiclePlate,
-      phoneNumber,
-      startDate,
-      endDate,
-      business,
-      observations
-    });
-    console.log("[DRIVER] Updated Driver");
-    console.log(updatedDriver);
+    console.log("[DRIVER] Update Driver");
 
-    if (!updatedDriver) {
-      return res.status(400).json({
+    try {
+      var {
+        name,
+        dni,
+        vehiclePlate,
+        phoneNumber,
+        startDate,
+        endDate,
+        business,
+        observations
+      } = req.body;
+      var updatedDriver = yield _Driver.default.findByIdAndUpdate(req.params.id, {
+        name,
+        dni,
+        vehiclePlate,
+        phoneNumber,
+        startDate,
+        endDate,
+        business,
+        observations
+      });
+      console.log(updatedDriver);
+
+      if (!updatedDriver) {
+        return res.status(400).json({
+          ok: false,
+          message: "Conductor no existe"
+        });
+      }
+
+      return res.json({
+        ok: true,
+        message: "Conductor actualizado correctamente"
+      });
+    } catch (err) {
+      return res.status(500).json({
         ok: false,
-        message: "Conductor no existe"
+        message: err
       });
     }
-
-    return res.json({
-      ok: true,
-      message: "Conductor actualizado correctamente"
-    });
   });
 
   return function updateDriver(_x7, _x8) {
@@ -150,21 +174,29 @@ exports.updateDriver = updateDriver;
 
 var deleteDriver = /*#__PURE__*/function () {
   var _ref5 = _asyncToGenerator(function* (req, res) {
-    var deletedDriver = yield _Driver.default.findByIdAndDelete(req.params.id);
-    console.log("[DRIVER] Deleted Driver");
-    console.log(deletedDriver);
+    console.log("[DRIVER] Delete Driver");
 
-    if (!deletedDriver) {
-      return res.status(400).json({
+    try {
+      var deletedDriver = yield _Driver.default.findByIdAndDelete(req.params.id);
+      console.log(deletedDriver);
+
+      if (!deletedDriver) {
+        return res.status(400).json({
+          ok: false,
+          message: "Conductor no existe"
+        });
+      }
+
+      return res.status(200).json({
+        ok: true,
+        message: "Conductor eliminado correctamente"
+      });
+    } catch (err) {
+      return res.status(500).json({
         ok: false,
-        message: "Conductor no existe"
+        message: err
       });
     }
-
-    return res.status(200).json({
-      ok: true,
-      message: "Conductor eliminado correctamente"
-    });
   });
 
   return function deleteDriver(_x9, _x10) {

@@ -15,24 +15,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var getUser = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* (req, res) {
-    var user = yield _User.default.findById(req.params.id);
     console.log("[USER] Get User");
-    console.log(user);
 
-    if (!user) {
-      return res.status(400).json({
+    try {
+      var user = yield _User.default.findById(req.params.id);
+      console.log(user);
+
+      if (!user) {
+        return res.status(400).json({
+          ok: false,
+          message: "No existe usuario"
+        });
+      }
+
+      return res.status(200).json({
+        ok: true,
+        user: {
+          firstName: user.firstName,
+          lastName: user.lastName
+        }
+      });
+    } catch (err) {
+      return res.status(500).json({
         ok: false,
-        message: "No existe usuario"
+        message: err
       });
     }
-
-    return res.status(200).json({
-      ok: true,
-      user: {
-        firstName: user.firstName,
-        lastName: user.lastName
-      }
-    });
   });
 
   return function getUser(_x, _x2) {
