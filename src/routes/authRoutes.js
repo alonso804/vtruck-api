@@ -9,6 +9,6 @@ const authRoutes = Router();
 
 authRoutes.post("/signin", signin);
 
-authRoutes.post("/signup", checkDuplicateUsername, checkDuplicateEmail, signup);
+authRoutes.post("/signup", checkDuplicateEmail, checkDuplicateUsername, signup);
 
 export default authRoutes;
