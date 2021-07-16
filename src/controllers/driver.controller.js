@@ -38,10 +38,6 @@ export const getDrivers = async (_, res) => {
   console.log("[DRIVER] Get Drivers");
   console.log(drivers);
 
-  if (drivers.length === 0) {
-    return res.status(400).json({ ok: false, message: "No hay conductores" });
-  }
-
   return res.status(200).json({ ok: true, drivers });
 };
 
