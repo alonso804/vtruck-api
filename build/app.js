@@ -42,7 +42,7 @@ app.use(_express.default.urlencoded({
   extended: false
 }));
 app.use((0, _cors.default)({
-  origin: "http://localhost:3000"
+  origin: "".concat(process.env.ORIGIN)
 }));
 app.get("/", (_, res) => {
   res.json({

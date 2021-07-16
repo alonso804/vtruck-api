@@ -5,5 +5,5 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("DB is connected"))
+  .then(() => console.log(`DB is connected on ${process.env.MONGO_URL_DEV}`))
   .catch((err) => console.error(err));
