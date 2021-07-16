@@ -15,19 +15,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var createRoles = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* () {
-    var count = yield _Role.default.estimatedDocumentCount();
+    try {
+      var count = yield _Role.default.estimatedDocumentCount();
 
-    if (count > 0) {
-      return;
+      if (count > 0) {
+        return;
+      }
+
+      yield Promise.all([new _Role.default({
+        name: "user"
+      }).save(), new _Role.default({
+        name: "moderator"
+      }).save(), new _Role.default({
+        name: "admin"
+      }).save()]);
+    } catch (_unused) {
+      console.log("Server Error");
     }
-
-    yield Promise.all([new _Role.default({
-      name: "user"
-    }).save(), new _Role.default({
-      name: "moderator"
-    }).save(), new _Role.default({
-      name: "admin"
-    }).save()]);
   });
 
   return function createRoles() {
