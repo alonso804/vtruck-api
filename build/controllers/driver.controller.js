@@ -53,13 +53,21 @@ exports.createDriver = createDriver;
 
 var getDrivers = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator(function* (_, res) {
-    var drivers = yield _Driver.default.find();
     console.log("[DRIVER] Get Drivers");
-    console.log(drivers);
-    return res.status(200).json({
-      ok: true,
-      drivers
-    });
+
+    try {
+      var drivers = yield _Driver.default.find();
+      console.log(drivers);
+      return res.status(200).json({
+        ok: true,
+        drivers
+      });
+    } catch (_unused) {
+      return res.status(500).json({
+        ok: false,
+        message: "Internal server error"
+      });
+    }
   });
 
   return function getDrivers(_x3, _x4) {

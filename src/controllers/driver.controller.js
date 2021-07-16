@@ -33,12 +33,19 @@ export const createDriver = async (req, res) => {
 };
 
 export const getDrivers = async (_, res) => {
-  const drivers = await Driver.find();
-
   console.log("[DRIVER] Get Drivers");
-  console.log(drivers);
 
-  return res.status(200).json({ ok: true, drivers });
+  try {
+    const drivers = await Driver.find();
+
+    console.log(drivers);
+
+    return res.status(200).json({ ok: true, drivers });
+  } catch {
+    return res
+      .status(500)
+      .json({ ok: false, message: "Internal server error" });
+  }
 };
 
 export const getDriver = async (req, res) => {
