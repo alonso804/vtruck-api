@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _express = require("express");
 
@@ -16,6 +16,6 @@ driverRoutes.post("/create-driver", _verifyDriver.checkDuplicateDni, _driver.cre
 driverRoutes.get("/get-drivers", _driver.getDrivers);
 driverRoutes.get("/get-driver/:id", _driver.getDriver);
 driverRoutes.put("/update-driver/:id", _driver.updateDriver);
-driverRoutes["delete"]("/delete-driver/:id", _driver.deleteDriver);
+driverRoutes.delete("/delete-driver/:id", _driver.deleteDriver);
 var _default = driverRoutes;
-exports["default"] = _default;
+exports.default = _default;

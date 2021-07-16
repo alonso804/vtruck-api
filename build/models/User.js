@@ -3,13 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _mongoose = require("mongoose");
 
 var _bcryptjs = _interopRequireDefault(require("bcryptjs"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -31,26 +31,10 @@ var userSchema = new _mongoose.Schema({
 });
 
 userSchema.statics.encryptPassword = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(password) {
-    var salt;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return _bcryptjs["default"].genSalt(10);
-
-          case 2:
-            salt = _context.sent;
-            return _context.abrupt("return", _bcryptjs["default"].hash(password, salt));
-
-          case 4:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
+  var _ref = _asyncToGenerator(function* (password) {
+    var salt = yield _bcryptjs.default.genSalt(10);
+    return _bcryptjs.default.hash(password, salt);
+  });
 
   return function (_x) {
     return _ref.apply(this, arguments);
@@ -58,20 +42,9 @@ userSchema.statics.encryptPassword = /*#__PURE__*/function () {
 }();
 
 userSchema.statics.comparePassword = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(receivedPassword, password) {
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            return _context2.abrupt("return", _bcryptjs["default"].compare(receivedPassword, password));
-
-          case 1:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
+  var _ref2 = _asyncToGenerator(function* (receivedPassword, password) {
+    return _bcryptjs.default.compare(receivedPassword, password);
+  });
 
   return function (_x2, _x3) {
     return _ref2.apply(this, arguments);
@@ -80,4 +53,4 @@ userSchema.statics.comparePassword = /*#__PURE__*/function () {
 
 var _default = (0, _mongoose.model)("User", userSchema);
 
-exports["default"] = _default;
+exports.default = _default;
