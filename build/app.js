@@ -15,6 +15,8 @@ var _cors = _interopRequireDefault(require("cors"));
 
 var _dotenv = _interopRequireDefault(require("dotenv"));
 
+var _helmet = _interopRequireDefault(require("helmet"));
+
 var _initialSetup = require("./libs/initialSetup");
 
 var _authRoutes = _interopRequireDefault(require("./routes/authRoutes"));
@@ -32,7 +34,9 @@ _dotenv.default.config();
 
 (0, _initialSetup.createRoles)();
 app.set("pkg", _package.default);
+app.set("port", process.env.PORT || 4000);
 app.use((0, _morgan.default)("dev"));
+app.use((0, _helmet.default)());
 app.use(_express.default.json());
 app.use(_express.default.urlencoded({
   extended: false

@@ -3,6 +3,7 @@ import morgan from "morgan";
 import pkg from "../package.json";
 import cors from "cors";
 import dotenv from "dotenv";
+import helmet from "helmet";
 
 import { createRoles } from "./libs/initialSetup";
 
@@ -16,8 +17,10 @@ dotenv.config();
 createRoles();
 
 app.set("pkg", pkg);
+app.set("port", process.env.PORT || 4000);
 
 app.use(morgan("dev"));
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
